@@ -3,8 +3,8 @@ chat messenger
 This React Native Application application is built using expo
 
 # Main Dependencies used
-  React-navigation - for navigation
-  Redux - for state management
-  Native-base - for UI 
-  axios - Api calls
+  React-navigation - for navigation <br />
+  Redux - for state management <br />
+  Native-base - for UI  <br />
+  axios - Api calls <br />
 
