@@ -15,7 +15,7 @@ export default class Navbar extends Component<{}> {
        return(
        	   <TouchableOpacity style={styles.buttonLong} onPress={()=> onPress()}>
   					<Text style={styles.buttonLongText}> {label} </Text>
-  		   </TouchableOpacity>
+  			</TouchableOpacity>
        	)
 	}
 }

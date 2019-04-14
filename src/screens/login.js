@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import { StyleSheet, Text, View } from 'react-native';
+import { loginUserAction, setValue } from '../actions/account'
 
-export default class Login extends React.Component {
+class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
@@ -10,6 +12,23 @@ export default class Login extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    account: state.account
+  }
+  // body...
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+     setValue: (arr) => dispatch(setValue(arr)),
+     loginUser: (obj) => dispatch(loginUserAction(obj))
+  }
+  // body...
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {
