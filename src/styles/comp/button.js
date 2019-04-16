@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { buttonText } from '../colors';
+import { buttonText, button } from '../colors';
 
 export default (styles = StyleSheet.create({
   container: {
@@ -9,8 +9,10 @@ export default (styles = StyleSheet.create({
     borderRadius: 50,
   },
   buttonLong: {
-    flex: 1,
     height: 43,
+    marginTop: 70,
+    backgroundColor: button,
+    borderRadius: 100,
     justifyContent: 'center',
   },
   buttonLongText: {

@@ -4,7 +4,7 @@ export default (styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 44,
-    marginTop: 82,
+    marginTop: 100,
   },
   title: {
     fontFamily: 'Roboto',

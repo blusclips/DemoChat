@@ -1,22 +1,34 @@
-import { axiosInstance, network } from './constant'
+import { axiosInstance } from './constant'
 
-async function loginWithEmail(data) {
+async function loginUser(username) {  
+  try {
+      const user = await axiosInstance.post(`/users/login`, {username});
+      return { success: true, data: user.data }
+  } catch (error) {
+     return { success: false }
+  }
+}
+
+async function fetchUsers(obj) {
+ try {
+    const users = await axiosInstance.post(`/users`, {_id: obj._id});
+    return { success: true, data: users.data }
+ } catch (error) {  
+   return { success: false }
+ }
+}
+
+async function sendMessage(message) {
    try {
-         const response = await axiosInstance.post(`/auth/login/email`, data)
-         return { success: true }
-     } catch (error) {
-        if(error.response) {
-           const { data } = error.response
-           const { email, password } = data
-           if(email){ return { success: false, data: 'Email not found. check your email and try again' } }
-           if(password) { return { success: false, data: 'Incorrect password. check your password and try again' } }
-           return { success: false, data: 'User not found' }
-        } else {
-         return { success: false, data: network }
-        }
+      const users = await axiosInstance.post(`/message/send`, message);
+      return { success: true, data: users.data }
+   } catch (error) {  
+     return { success: false }
    }
 }
 
 export {
-   loginWithEmail
+   loginUser,
+   fetchUsers,
+   sendMessage
 }

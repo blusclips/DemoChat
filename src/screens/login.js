@@ -1,13 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View } from 'react-native';
-import { loginUserAction, setValue } from '../actions/account'
+import { StyleSheet, View } from 'react-native';
+import { loginUserAction, setValueAction } from '../actions/users'
 
-class LoginScreen extends React.Component {
+import Title from '../components/title'
+import Error from '../components/error'
+import TextInput from '../components/input'
+import ButtonLOng from '../components/button/long'
+
+class HomeScreen extends Component<{}> {
+
+  loginUser = () => {
+    const { store, setValue, loginUser, navigation } = this.props
+    const { username } = store
+    if(username === 'userA' || username === 'userB') {
+      loginUser({ username, navigation })
+    } else {
+      setValue({ field: 'error', value: 'Enter Username - (userA or userB)' })
+      return
+    }
+  }
+
+  addUsername = (value) => {
+    const { setValue } = this.props
+    setValue({field: 'error', value: '' })
+    setValue({field: 'username', value }) 
+  }
+
   render() {
+    const { store, setValue } = this.props
+    const { error, username } = store
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app! loggin </Text>
+      <View style={{ flex: 1, width: '80%', marginLeft: '10%' }}>
+           {Title({ title: 'Demo Messaenger'})}
+           {(error !== '') && <Error error={error} /> }
+           <TextInput label="userA or userB" onChange={ this.addUsername } />
+           <ButtonLOng label="Login" onPress={this.loginUser} />
       </View>
     );
   }
@@ -15,26 +43,33 @@ class LoginScreen extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    account: state.account
+    store: state
   }
   // body...
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-     setValue: (arr) => dispatch(setValue(arr)),
+     setValue: (obj) => dispatch(setValueAction(obj)),
      loginUser: (obj) => dispatch(loginUserAction(obj))
   }
   // body...
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
   },
+  loader: {
+    justifyContent: 'center',
+  },
+  network: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontSize: 14,
+    fontWeight: 'bold'
+  }
 });

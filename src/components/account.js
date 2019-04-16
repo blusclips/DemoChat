@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { TouchableOpacity } from 'react-native'
 import { View, Text, Button } from 'native-base'
+import { Navigation } from 'react-native-navigation'
 
 import styles from '../styles/comp/account'
 
