@@ -4,7 +4,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { GiftedChat, Actions, Bubble } from 'react-native-gifted-chat';
 import { StyleSheet, View, Image, Text, Platform } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { ImagePicker } from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 import { Header } from 'react-native-elements'
 import { setValueAction, sendMessageAction, referMessAction, uploadImageAction } from '../actions/users'
 
@@ -12,7 +12,7 @@ import BubbleLeft from '../components/BubbleLeft'
 import BubbleRight from '../components/BubbleRight'
 
 
-class HomeScreen extends Component<{}> {
+class HomeScreen extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -91,6 +91,11 @@ class HomeScreen extends Component<{}> {
   }
 
   addImage = async (props) => {
+    const { status, expires, permissions } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL)
+    if (status !== 'granted') {
+      alert('Hey! You heve not enabled Camera permissions');
+      return
+    }
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
