@@ -1,4 +1,4 @@
-import { fetch_users, network, loading, set_value, add_sent_message, refer_message } from '../actions/types';
+import { fetch_users, network, loading, set_value, add_sent_message, refer_message, upload_image } from '../actions/types';
 
 const initialState = {
   json_web_token: 'jwt',
@@ -58,14 +58,23 @@ export default function accountReducer(state = initialState, action) {
         network: true
       }
     case add_sent_message:
+      const messageArr = [...[action.data], ...state.messages];
+      messageArr.map((mes) => {
+        if(mes.refer) {
+           mes.refer = false
+           return mes
+        } else {
+          return mes
+        }
+      })
       return {
         ...state,
-        messages: [...[action.data], ...state.messages]
+        messages: messageArr
       }
     case refer_message:
       const newMesageArr = state.messages.map((mess) => {
          if(mess._id === action.data._id) {
-            mess.refer = true;
+            mess.refer = !mess.refer;
             return mess
          } else {
             return mess
@@ -75,6 +84,19 @@ export default function accountReducer(state = initialState, action) {
         ...state,
         messages: newMesageArr
       }
+    case upload_image:
+    const MessageArr = state.messages.map((mess) => {
+      if(mess._id === action.data._id) {
+        mess.upload = true
+        return mess
+      } else {
+        return mess
+      }
+    })
+    return {
+      ...state,
+      messages: MessageArr
+    }
     default:
       return state;
   }

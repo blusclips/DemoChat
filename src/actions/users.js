@@ -1,6 +1,6 @@
-import { fetch_users, loading, network, set_value, add_sent_message, refer_message } from './types';
+import { fetch_users, loading, network, set_value, add_sent_message, refer_message, upload_image } from './types';
 
-import { fetchUsers, sendMessage, loginUser } from '../network/account'
+import { fetchUsers, sendMessage, loginUser, uploadImage } from '../network/account'
 import { Socket } from '../network/constant'
 
 export const setValueAction = (obj) => {
@@ -42,14 +42,26 @@ export const sendMessageAction = (messageArr) => {
       Socket.on('recieve_text_message', function(data) {
          dispatch({ type: add_sent_message, data: data })
       });
-      sendMessage({message: messageArr })
-
-       
+      sendMessage({message: messageArr }) 
    }
 }
 
 export const referMessAction = (obj) => {
    return (dispatch) => {
       dispatch({ type: refer_message, data: obj })
+   }
+}
+
+export const uploadImageAction = (obj) => {
+   return (dispatch) => {
+      dispatch({ type: add_sent_message, data: obj })
+      uploadImage(obj).then(resp => { 
+         const { secure_url, eager } = JSON.parse(resp._bodyInit)
+         const thumbnail = eager[0].secure_url
+         obj.image_secure_url = secure_url;
+         obj.image_thumbnail = thumbnail;
+         sendMessage({message: obj })
+         dispatch({ type: upload_image, data: obj })
+      })
    }
 }

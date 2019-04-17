@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { StyleSheet, View, Image, Text, Platform } from 'react-native';
-import { Header } from 'react-native-elements'
-import { setValueAction, sendMessageAction, referMessAction } from '../actions/users'
-
-import Loader from '../components/loader'
 import { GiftedChat, Actions, Bubble } from 'react-native-gifted-chat';
+import { StyleSheet, View, Image, Text, Platform } from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { ImagePicker } from 'expo';
+import { Header } from 'react-native-elements'
+import { setValueAction, sendMessageAction, referMessAction, uploadImageAction } from '../actions/users'
+
+import BubbleLeft from '../components/BubbleLeft'
+import BubbleRight from '../components/BubbleRight'
+
 
 class HomeScreen extends Component<{}> {
   constructor(props){
@@ -23,12 +27,17 @@ class HomeScreen extends Component<{}> {
        const { messages } = store
        const newMessage = messagesArr[0];
        newMessage.select = false;
+       newMessage.refer = false;
        newMessage._id = messages.length + 1;
        if(refer) {
          newMessage['refer'] = true
          newMessage['select'] = selectedMessage
        }
        sendMessage(newMessage);
+       this.setState({
+        refer: false,
+        selectedMessage: {}
+      })
   }
 
   renderCustomActions(props) {
@@ -55,23 +64,60 @@ class HomeScreen extends Component<{}> {
   }
 
   renderMessage = (props) => {
+    const { currentMessage } = props;
     return (
-      <Text> hallo bloody snikky </Text>
+        <View>
+            {props.position === 'left' && <BubbleLeft selectChat={this.selectChat} { ...props } /> }
+            {props.position === 'right' && <BubbleRight selectChat={this.selectChat} { ...props } /> }
+        </View>
     )
   }
 
-  selectChat = (e, message) => {
-     this.setState({
-       refer: true,
-       selectedMessage: message
-     })
-     alert(JSON.stringify(message))
+  selectChat = (message) => {
+     const { refer } = this.state
+     if(refer) {
+      this.setState({
+        refer: false,
+        selectedMessage: {}
+      })
+     } else {
+      this.setState({
+        refer: true,
+        selectedMessage: message
+      })
+     }
      const { referMess } = this.props
      referMess(message);
   }
 
-  addImage = () => {
-     alert('add my image')
+  addImage = async (props) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+      const { navigation, store, sendMessage, uploadImage } = this.props
+      const { profile, username } = navigation.state.params
+      const { messages, user } = store
+      const obj = {
+         _id: messages.length + 1,
+         createdAt: new Date(),
+         user: {
+           _id: user._id,
+           name: user.username,
+           avatar: user.profile
+         },
+         image: result.uri,
+         select: false,
+         refer: false,
+         upload: false
+      }
+      uploadImage(obj)
+    }
   }
 
   render() {
@@ -79,7 +125,7 @@ class HomeScreen extends Component<{}> {
     const { profile, username } = navigation.state.params
     const { messages, message, user } = store
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: '#f6f6f6'}}>
       <Header
           placement="left"
           leftComponent={<Image source={{uri: profile }} style={{ width: 35, height: 35, borderRadius: 100 }} />}
@@ -104,10 +150,7 @@ class HomeScreen extends Component<{}> {
             alwaysShowSend={true}
             showUserAvatar={true}
             scrollToBottom={true}
-            renderAvatarOnTop={true}
             renderMessage={this.renderMessage}
-            renderBubble={this.renderBubble}
-            onLongPress={this.selectChat}
             onPressActionButton={this.addImage}
          />
          {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
@@ -127,6 +170,7 @@ function mapDispatchToProps(dispatch) {
   return {
      setValue: (obj) => dispatch(setValueAction(obj)),
      sendMessage: (arr) => dispatch(sendMessageAction(arr)),
+     uploadImage: (obj) => dispatch(uploadImageAction(obj)),
      referMess: (obj) => dispatch(referMessAction(obj))
   }
   // body...
@@ -147,12 +191,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 14,
     fontWeight: 'bold'
-  },
-  newInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    fontSize: 16,
-    padding:10,
-    height:50,
-  },
+  }
 });
