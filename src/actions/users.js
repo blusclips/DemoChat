@@ -13,8 +13,9 @@ export const loginUserAction = (obj) => {
    return (dispatch) => {
       loginUser( obj.username ).then(({ success, data }) => {
          if(success) {
-            dispatch({ type: set_value, data: { field: 'user', value: data.data }})
-            obj.navigation.navigate('Home')
+            dispatch({ type: set_value, data: { field: 'user', value: data.data.user }})
+            dispatch({ type: set_value, data: { field: 'otherUser', value: data.data.otherUser }})
+            obj.navigation.navigate('Chat')
          } else {
             dispatch({ type: set_value, data: { field: 'error', value: 'Enter userA or userB'}})
          }

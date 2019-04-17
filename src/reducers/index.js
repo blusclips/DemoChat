@@ -4,6 +4,7 @@ const initialState = {
   json_web_token: 'jwt',
   users: [],
   user: {},
+  otherUser: {},
   loading: false,
   network: false,
   error: '',

@@ -10,15 +10,6 @@ async function loginUser(username) {
   }
 }
 
-async function fetchUsers(obj) {
- try {
-    const users = await axiosInstance.post(`/users`, {_id: obj._id});
-    return { success: true, data: users.data }
- } catch (error) {  
-   return { success: false }
- }
-}
-
 async function sendMessage(message) {
    try {
       const users = await axiosInstance.post(`/message/send`, message);
@@ -49,7 +40,6 @@ async function uploadImage(obj) {
 
 export {
    loginUser,
-   fetchUsers,
    sendMessage,
    uploadImage
 }

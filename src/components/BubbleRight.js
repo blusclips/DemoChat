@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 
 import { Text } from 'native-base'
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { ImageBackground, ActivityIndicator } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import {  utils } from 'react-native-gifted-chat';
 import { Svg } from 'expo';
 
-const { isSameUser, isSameDay } = utils;
+const { isSameUser } = utils;
+const config = {
+  velocityThreshold: 0.3,
+  directionalOffsetThreshold: 80
+};
 
 export default class Navbar extends Component<{}> {
 	constructor(props) {
@@ -23,13 +28,26 @@ export default class Navbar extends Component<{}> {
       const sameUser = isSameUser(currentMessage, nextMessage);
       const marginBottom = sameUser ? 2 : 10;
        return(
-        <TouchableOpacity onLongPress={() => this.chatHighlight(currentMessage)} style={[styles.itemOut, { marginBottom }]}>
-        <View style={[styles.balloon, {backgroundColor: !currentMessage.refer ? '#cdeafc' : '#009ef7' }]}>
-          { currentMessage.select ? <View> 
-            <Text style={{paddingTop: 5, color: 'white'}}> { currentMessage.select.text } </Text>
-            <Text style={{paddingTop: 2, color: 'white', fontSize: 11, fontWeight: 'bold' }}> { currentMessage.select.user.name } </Text>
+        <GestureRecognizer 
+           onSwipeRight={() => this.chatHighlight(currentMessage)} 
+           onSwipe={() => this.chatHighlight(currentMessage)} 
+           onSwipeLeft={() => this.chatHighlight(currentMessage)} 
+           style={[styles.itemOut, { marginBottom }]}>
+        <View style={[styles.balloon, {backgroundColor: !currentMessage.image ? !currentMessage.refer ? '#435f7a' : '#009ef7' : null  }]}>
+          { currentMessage.select ? <View>
+            <View style={{ padding: 5}}>
+                <View style={{backgroundColor: '#9FADBD', borderRadius: 15}}>
+                  <View style={{flexDirection: 'row',}}>
+                    <View style={{height:50, width: 10, backgroundColor: '#00468A', borderTopLeftRadius: 15, borderBottomLeftRadius: 15}} />
+                      <View style={{flexDirection: 'column'}}>
+                        <Text style={{color: 'white', paddingHorizontal: 10, paddingTop: 5, fontWeight: '700'}}>{ currentMessage.select.user.name }</Text>
+                        <Text style={{color: 'white', paddingHorizontal: 10, paddingTop: 5}}>{ currentMessage.select.text }</Text>
+                      </View>
+                  </View>
+                </View>
+              </View>
           </View> : null }
-          { !currentMessage.image && <Text style={{paddingTop: 5, color: !currentMessage.refer ? '#346ca1' : '#fff', fontWeight: 'bold', fontSize: 13, paddingLeft: 5 }}> { currentMessage.text } </Text> }
+          { !currentMessage.image && <Text style={{ paddingTop: 5, color: !currentMessage.refer ? '#fff' : '#fff',  fontSize: 15, paddingLeft: 5, lineHeight: 17 }}> { currentMessage.text } </Text> }
           { currentMessage.image && <ImageBackground
             style={{ width: 200, height: 150, justifyContent: 'center' }}
             borderRadius={5}
@@ -37,7 +55,7 @@ export default class Navbar extends Component<{}> {
           > 
             { !currentMessage.upload && <ActivityIndicator style={{ justifyContent: 'center' }} color="blue" size="small" /> }
           </ImageBackground> }
-          { !sameUser && <View
+          { !sameUser && !currentMessage.image && <View
           style={[
             styles.arrowContainer,
             styles.arrowRightContainer,
@@ -46,14 +64,14 @@ export default class Navbar extends Component<{}> {
            <Svg style={styles.arrowRight} width={moderateScale(15.5, 0.6)} height={moderateScale(17.5, 0.6)} viewBox="32.485 17.5 15.515 17.5"  enable-background="new 32.485 17.5 15.515 17.5">
                 <Svg.Path
                     d="M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
-                    fill={ !currentMessage.refer ? '#cdeafc' : '#009ef7' }
+                    fill={ !currentMessage.refer ? '#435f7a' : '#009ef7' }
                     x="0"
                     y="0"
                 />
             </Svg>
           </View> }
         </View>
-      </TouchableOpacity>
+        </GestureRecognizer>
        	)
 	}
 }

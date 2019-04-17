@@ -14,7 +14,7 @@ export default class Navbar extends Component {
        return(
        	   <Item style={styles.container} floatingLabel>
                 <Label style={styles.label}> { label } </Label>
-                <Input autoCapitalize={false} secureTextEntry={password} style={ styles.textInput } onChangeText={(value) => onChange(value)} />
+                <Input autoCapitalize='none' secureTextEntry={password} style={ styles.textInput } onChangeText={(value) => onChange(value)} />
            </Item>
        	)
 	}

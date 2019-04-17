@@ -23,10 +23,10 @@ router.post('/', async (req, res) => {
 
 router.post('/login', async (req, res) => {
    const user = await User.findOne({ username: req.body.username}).exec();
+   const otherUser = await User.findOne({ username: { $ne: req.body.username }})
    // check if user exists
    if(user){
-      req.app.io.join('demo')
-      await res.json({ status: 200, data: user })
+      await res.json({ status: 200, data: { user, otherUser } })
    } else {
     res.json({ status: 200, data: {} });
    } 

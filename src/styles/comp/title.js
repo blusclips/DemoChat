@@ -10,7 +10,7 @@ export default (styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontWeight: '500',
-    color: 'rgba(0, 0, 0, 0.8)',
+    color: '#435f7a',
     fontSize: 24,
     lineHeight: 30,
     textAlign: 'center',

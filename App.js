@@ -1,9 +1,15 @@
 import React from 'react'
 import { createAppContainer } from "react-navigation";
+import { YellowBox } from 'react-native';
 import { Provider } from 'react-redux'
 import { Font } from 'expo';
 import configureStore from './src/configureStore'
 import AppNavigator from "./src/screens"
+
+console.ignoredYellowBox = ['Remote debugger'];
+YellowBox.ignoreWarnings([
+    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
+]);
 
 const AppContainer = createAppContainer(AppNavigator);
 

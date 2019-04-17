@@ -11,7 +11,7 @@ export default (styles = StyleSheet.create({
   buttonLong: {
     height: 43,
     marginTop: 70,
-    backgroundColor: button,
+    backgroundColor: '#435f7a',
     borderRadius: 100,
     justifyContent: 'center',
   },

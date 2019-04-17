@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { TouchableOpacity } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { GiftedChat, Actions, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Actions } from 'react-native-gifted-chat';
 import { StyleSheet, View, Image, Text, Platform } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { ImagePicker, Permissions } from 'expo';
-import { Header } from 'react-native-elements'
+import { Header, Icon } from 'react-native-elements'
 import { setValueAction, sendMessageAction, referMessAction, uploadImageAction } from '../actions/users'
 
 import BubbleLeft from '../components/BubbleLeft'
@@ -17,6 +17,9 @@ class HomeScreen extends Component {
     super(props)
     this.state = {
        refer: false,
+       showFooter: false,
+       replyMsg: '',
+       replyTo: '',
        selectedMessage: {}
     }
   }
@@ -36,6 +39,7 @@ class HomeScreen extends Component {
        sendMessage(newMessage);
        this.setState({
         refer: false,
+        showFooter: false,
         selectedMessage: {}
       })
   }
@@ -50,17 +54,31 @@ class HomeScreen extends Component {
     );
   }
 
-  renderBubble = (props, lol) => {
+  dismisChatFooter = () => {
+    this.setState({
+       showFooter: false
+    })
+  }
+
+  renderChatFooter = () => {
+    const { replyTo, replyMsg, showFooter } = this.state
+    if(!showFooter) {
+      return null
+    }
     return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          left: {
-            backgroundColor: '#f0f0f0',
-          }
-        }}
-      />
-    );
+      <View style={{height: 50, flexDirection: 'row'}}>
+      <View style={{height:50, width: 5, backgroundColor: '#435f7a'}}></View>
+      <View style={{flexDirection: 'column'}}>
+          <Text style={{color: '#435f7a', paddingLeft: 10, paddingTop: 5}}>{replyTo}</Text>
+          <Text style={{color: 'gray', paddingLeft: 10, paddingTop: 5}}>{replyMsg}</Text>
+      </View>
+        <View style={{flex: 1,justifyContent: 'center',alignItems:'flex-end', paddingRight: 10}}>
+          <TouchableOpacity onPress={this.dismisChatFooter}>
+              <Icon name="x" type="feather" color="#0084ff" />
+          </TouchableOpacity>
+         </View>
+      </View>
+    )
   }
 
   renderMessage = (props) => {
@@ -83,7 +101,10 @@ class HomeScreen extends Component {
      } else {
       this.setState({
         refer: true,
-        selectedMessage: message
+        selectedMessage: message,
+        showFooter: true,
+        replyTo: message.user.name,
+        replyMsg: message.text
       })
      }
      const { referMess } = this.props
@@ -97,7 +118,7 @@ class HomeScreen extends Component {
       return
     }
     let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
+      allowsEditing: false,
       aspect: [4, 3],
     });
 
@@ -105,8 +126,7 @@ class HomeScreen extends Component {
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
-      const { navigation, store, sendMessage, uploadImage } = this.props
-      const { profile, username } = navigation.state.params
+      const { store, uploadImage } = this.props
       const { messages, user } = store
       const obj = {
          _id: messages.length + 1,
@@ -126,17 +146,17 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { navigation, store, setValue } = this.props
-    const { profile, username } = navigation.state.params
+    const { store, setValue } = this.props
+    const { profile, username } = store.otherUser
     const { messages, message, user } = store
     return (
-      <View style={{flex: 1, backgroundColor: '#f6f6f6'}}>
+      <View style={{flex: 1, backgroundColor: '#E6EAEA'}}>
       <Header
           placement="left"
           leftComponent={<Image source={{uri: profile }} style={{ width: 35, height: 35, borderRadius: 100 }} />}
-          centerComponent={{ text: username, style: { color: '#fff', fontWeight: 'bold', fontSize: 21 } }}
+          centerComponent={{ text: username, style: { color: '#435f7a', fontWeight: 'bold', fontSize: 21 } }}
           containerStyle={{
-            backgroundColor: '#32505d',
+            backgroundColor: '#f5f5f5',
             justifyContent: 'space-around'
           }}
         />
@@ -157,6 +177,7 @@ class HomeScreen extends Component {
             scrollToBottom={true}
             renderMessage={this.renderMessage}
             onPressActionButton={this.addImage}
+            renderChatFooter={this.renderChatFooter}
          />
          {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
          </View>
