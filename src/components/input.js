@@ -4,7 +4,7 @@ import { Item, Input, Label } from 'native-base'
 
 import styles from '../styles/comp/input'
 
-export default class Navbar extends Component<{}> {
+export default class Navbar extends Component {
 	constructor(props) {
 		super(props);
 	}
@@ -14,7 +14,7 @@ export default class Navbar extends Component<{}> {
        return(
        	   <Item style={styles.container} floatingLabel>
                 <Label style={styles.label}> { label } </Label>
-                <Input secureTextEntry={password} style={ styles.textInput } onChangeText={(value) => onChange(value)} />
+                <Input autoCapitalize={false} secureTextEntry={password} style={ styles.textInput } onChangeText={(value) => onChange(value)} />
            </Item>
        	)
 	}

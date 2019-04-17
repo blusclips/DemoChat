@@ -12,23 +12,13 @@ const messages = require('./routes/message')
 const uri = process.env.MONGODB_URI;
 const port = process.env.PORT || 2000;
 
-app.set('socket', io)
 app.use(cors());
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Add headers
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Credentials', true)
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
-})
-
 // connection succesfull
-io.on('connection', (socket) =>{
+io.on('connection', (socket) => {
   app.io = socket
   socket.join('demo')
   console.log('a user is connected')

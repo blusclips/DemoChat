@@ -8,7 +8,7 @@ import Error from '../components/error'
 import TextInput from '../components/input'
 import ButtonLOng from '../components/button/long'
 
-class HomeScreen extends Component<{}> {
+class HomeScreen extends Component {
 
   loginUser = () => {
     const { store, setValue, loginUser, navigation } = this.props
