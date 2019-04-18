@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { Text } from 'native-base'
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { ImageBackground, ActivityIndicator } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
@@ -28,12 +27,10 @@ export default class Navbar extends Component<{}> {
       const sameUser = isSameUser(currentMessage, nextMessage);
       const marginBottom = sameUser ? 2 : 10;
        return(
-        <GestureRecognizer 
-           onSwipeRight={() => this.chatHighlight(currentMessage)} 
-           onSwipe={() => this.chatHighlight(currentMessage)} 
-           onSwipeLeft={() => this.chatHighlight(currentMessage)} 
+        <TouchableOpacity 
+          onLongPress={() => this.chatHighlight(currentMessage)}
            style={[styles.itemOut, { marginBottom }]}>
-        <View style={[styles.balloon, {backgroundColor: !currentMessage.image ? !currentMessage.refer ? '#435f7a' : '#009ef7' : null  }]}>
+        <View style={[styles.balloon, {backgroundColor: !currentMessage.image ? '#435f7a' : null  }]}>
           { currentMessage.select ? <View>
             <View style={{ padding: 5}}>
                 <View style={{backgroundColor: '#9FADBD', borderRadius: 15}}>
@@ -71,7 +68,7 @@ export default class Navbar extends Component<{}> {
             </Svg>
           </View> }
         </View>
-        </GestureRecognizer>
+        </TouchableOpacity>
        	)
 	}
 }

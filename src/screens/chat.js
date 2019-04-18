@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Keyboard } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { GiftedChat, Actions } from 'react-native-gifted-chat';
 import { StyleSheet, View, Image, Text, Platform } from 'react-native';
 import { ImagePicker, Permissions } from 'expo';
 import { Header, Icon } from 'react-native-elements'
-import { setValueAction, sendMessageAction, referMessAction, uploadImageAction } from '../actions/users'
+import { setValueAction, sendMessageAction, referMessAction, uploadImageAction, getNewMessageAction } from '../actions/users'
 
 import BubbleLeft from '../components/BubbleLeft'
 import BubbleRight from '../components/BubbleRight'
+
+function makeid(length) {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < length; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
 
 
 class HomeScreen extends Component {
@@ -24,14 +34,24 @@ class HomeScreen extends Component {
     }
   }
 
+  componentWillMount = () => {
+    const { getNewMessage, store } = this.props
+    getNewMessage(store.user._id)
+  }
+
   onSend = (messagesArr = []) => {
        const { sendMessage, store } = this.props
        const { refer, selectedMessage } = this.state
-       const { messages } = store
+       const { otherUser } = store
        const newMessage = messagesArr[0];
        newMessage.select = false;
        newMessage.refer = false;
-       newMessage._id = messages.length + 1;
+       newMessage._id = makeid(8);
+       newMessage.reciever = {
+          _id: otherUser._id,
+          name: otherUser.username,
+          avatar: otherUser.profile
+       };
        if(refer) {
          newMessage['refer'] = true
          newMessage['select'] = selectedMessage
@@ -42,6 +62,7 @@ class HomeScreen extends Component {
         showFooter: false,
         selectedMessage: {}
       })
+      Keyboard.dismiss()
   }
 
   renderCustomActions(props) {
@@ -58,6 +79,9 @@ class HomeScreen extends Component {
     this.setState({
        showFooter: false
     })
+    const { referMess } = this.props
+    const { selectedMessage } = this.state
+    referMess(selectedMessage);
   }
 
   renderChatFooter = () => {
@@ -127,14 +151,19 @@ class HomeScreen extends Component {
     if (!result.cancelled) {
       this.setState({ image: result.uri });
       const { store, uploadImage } = this.props
-      const { messages, user } = store
+      const { user, otherUser } = store
       const obj = {
-         _id: messages.length + 1,
+         _id: makeid(8),
          createdAt: new Date(),
          user: {
            _id: user._id,
            name: user.username,
            avatar: user.profile
+         },
+         reciever: {
+          _id: otherUser._id,
+          name: otherUser.username,
+          avatar: otherUser.profile
          },
          image: result.uri,
          select: false,
@@ -197,7 +226,8 @@ function mapDispatchToProps(dispatch) {
      setValue: (obj) => dispatch(setValueAction(obj)),
      sendMessage: (arr) => dispatch(sendMessageAction(arr)),
      uploadImage: (obj) => dispatch(uploadImageAction(obj)),
-     referMess: (obj) => dispatch(referMessAction(obj))
+     referMess: (obj) => dispatch(referMessAction(obj)),
+     getNewMessage: (_id) => dispatch(getNewMessageAction(_id))
   }
   // body...
 }

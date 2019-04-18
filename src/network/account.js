@@ -10,15 +10,6 @@ async function loginUser(username) {
   }
 }
 
-async function sendMessage(message) {
-   try {
-      const users = await axiosInstance.post(`/message/send`, message);
-      return { success: true, data: users.data }
-   } catch (error) {  
-     return { success: false }
-   }
-}
-
 async function uploadImage(obj) {
    let localUri = obj.image;
    let filename = localUri.split('/').pop();
@@ -40,6 +31,5 @@ async function uploadImage(obj) {
 
 export {
    loginUser,
-   sendMessage,
    uploadImage
 }

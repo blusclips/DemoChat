@@ -1,4 +1,4 @@
-import { fetch_users, network, loading, set_value, add_sent_message, refer_message, upload_image } from '../actions/types';
+import { set_value, add_sent_message, refer_message, upload_image, add_offline_messages } from '../actions/types';
 
 const initialState = {
   json_web_token: 'jwt',
@@ -9,27 +9,7 @@ const initialState = {
   network: false,
   error: '',
   username: '',
-  messages: [ {
-    _id: 1,
-    text: "Hello developer",
-    refer: false,
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: "React Native",
-      avatar: "https://placeimg.com/140/140/any"
-    }
-  }, {
-    _id: 2,
-    text: "Hello developer jakins",
-    refer: false,
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: "React Native",
-      avatar: "https://placeimg.com/140/140/any"
-    }
-  }],
+  messages: [],
   message: ''
 };
 
@@ -40,24 +20,15 @@ export default function accountReducer(state = initialState, action) {
         ...state,
         [action.data.field]: action.data.value
       }
-    case fetch_users:
-      return {
-        ...state,
-        users: action.data.data,
-        loading: false
-      }
-    case loading:
-      return {
-        ...state,
-        network: false,
-        loading: true
-      }
-    case network:
-      return {
-        ...state,
-        loading: false,
-        network: true
-      }
+    case add_offline_messages:
+    const offlineMessages = action.data.map(messageObj => {
+        messageObj = JSON.parse(messageObj.message)
+        return messageObj
+    });
+    return {
+      ...state,
+      messages: offlineMessages.reverse()
+    }
     case add_sent_message:
       const messageArr = [...[action.data], ...state.messages];
       messageArr.map((mes) => {

@@ -1,7 +1,8 @@
-import { fetch_users, loading, network, set_value, add_sent_message, refer_message, upload_image } from './types';
+import { set_value, add_sent_message, refer_message, upload_image, add_offline_messages } from './types';
 
-import { fetchUsers, sendMessage, loginUser, uploadImage } from '../network/account'
+import { loginUser, uploadImage } from '../network/account'
 import { Socket } from '../network/constant'
+
 
 export const setValueAction = (obj) => {
  return (dispatch) => {
@@ -23,27 +24,25 @@ export const loginUserAction = (obj) => {
    }
 }
 
-export const fetchUsersAction = (obj) => {
-    return (dispatch) => {
-       dispatch({ type: loading })
-       fetchUsers(obj).then(({ success, data }) => {
-         if(success){
-            dispatch({ type: fetch_users, data })
-         } else {
-            dispatch({ type: network })
-         }
-       })
-    }
-}
-
-export const sendMessageAction = (messageArr) => {
+export const sendMessageAction = (messageArr) => { 
    return (dispatch) => {
       if(messageArr.text === '') { return }
       dispatch({ type: add_sent_message, data: messageArr })
-      Socket.on('recieve_text_message', function(data) {
+      Socket.emit('send_message', messageArr);
+   }
+}
+
+export const getNewMessageAction = (obj) => {
+   return (dispatch) => {
+      Socket.emit('get_new_messages', { obj }, (data) => {
+         if(data.data.length > 1) {
+            dispatch({type: add_offline_messages, data: data.data })
+            Socket.emit('remove_old_messages')
+         }
+      })
+      Socket.on('recieved_message', function(data) {
          dispatch({ type: add_sent_message, data: data })
       });
-      sendMessage({message: messageArr }) 
    }
 }
 
@@ -61,7 +60,7 @@ export const uploadImageAction = (obj) => {
          const thumbnail = eager[0].secure_url
          obj.image_secure_url = secure_url;
          obj.image_thumbnail = thumbnail;
-         sendMessage({message: obj })
+         Socket.emit('send_message', obj );
          dispatch({ type: upload_image, data: obj })
       })
    }

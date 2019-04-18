@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Text } from 'native-base'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native'
 import { moderateScale } from 'react-native-size-matters';
 import {  utils } from 'react-native-gifted-chat';
 import { Svg } from 'expo';
@@ -10,7 +10,10 @@ const { isSameUser } = utils;
 
 export default class Navbar extends Component<{}> {
 	constructor(props) {
-		super(props);
+    super(props);
+    this.state = {
+      loadImage: false
+    }
   }
   
   chatHighlight = (message) => {
@@ -19,17 +22,28 @@ export default class Navbar extends Component<{}> {
 
 	render() {
          const { currentMessage, nextMessage } = this.props;
+         const { loadImage } = this.state
          const sameUser = isSameUser(currentMessage, nextMessage);
          const marginBottom = sameUser ? 2 : 10;
        return(
         <TouchableOpacity onLongPress={() => this.chatHighlight(currentMessage)} style={[styles.item, styles.itemIn, { marginBottom }]}>
-        <View style={[styles.balloon, { backgroundColor: !currentMessage.refer ? '#f5f5f5' : '#32505d' }]}>
+        <View style={[styles.balloon, { backgroundColor: !currentMessage.image ? '#f5f5f5' : null }]}>
         { currentMessage.select ? <View> 
             <Text style={{paddingTop: 5, color: 'white'}}> { currentMessage.select.text } </Text>
             <Text style={{paddingTop: 2, color: 'white', fontSize: 11, fontWeight: 'bold' }}> { currentMessage.select.user.name } </Text>
           </View> : null }
           <Text style={{paddingTop: 2, color: '#435f7a', fontSize: 15, lineHeight: 17 }}> { currentMessage.text } </Text>
-          { !sameUser && <View
+          
+          { currentMessage.image && <ImageBackground
+            onLoad={()=> this.setState({ loadImage: true })}
+            style={{ width: 200, height: 150, justifyContent: 'center', backgroundColor: !loadImage ? '#b0e0e6' : null }}
+            borderRadius={5}
+            source={{ uri: currentMessage.image_secure_url }}
+          > 
+            { !loadImage && <ActivityIndicator style={{ justifyContent: 'center' }} color="blue" size="small" /> }
+          </ImageBackground> }
+
+          { !sameUser && !currentMessage.image && <View
           style={[
             styles.arrowContainer,
             styles.arrowLeftContainer,
@@ -39,12 +53,12 @@ export default class Navbar extends Component<{}> {
            <Svg style={styles.arrowLeft} width={moderateScale(15.5, 0.6)} height={moderateScale(17.5, 0.6)} viewBox="32.484 17.5 15.515 17.5"  enable-background="new 32.485 17.5 15.515 17.5">
                 <Svg.Path
                     d="M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z"
-                    fill={ !currentMessage.refer ? '#f5f5f5' : '#32505d' }
+                    fill={ !currentMessage.image ? '#f5f5f5' : null }
                     x="0"
                     y="0"
                 />
             </Svg>
-          </View> }
+          </View> } 
         </View>
       </TouchableOpacity>
        	)
