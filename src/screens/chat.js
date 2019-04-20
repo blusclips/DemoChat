@@ -30,6 +30,7 @@ class HomeScreen extends Component {
        showFooter: false,
        replyMsg: '',
        replyTo: '',
+       message: '',
        selectedMessage: {}
     }
   }
@@ -39,27 +40,38 @@ class HomeScreen extends Component {
     getNewMessage(store.user._id)
   }
 
-  onSend = (messagesArr = []) => {
+  onSend = () => {
        const { sendMessage, store } = this.props
-       const { refer, selectedMessage } = this.state
-       const { otherUser } = store
-       const newMessage = messagesArr[0];
-       newMessage.select = false;
-       newMessage.refer = false;
-       newMessage._id = makeid(8);
-       newMessage.reciever = {
-          _id: otherUser._id,
-          name: otherUser.username,
-          avatar: otherUser.profile
-       };
+       const { refer, selectedMessage, message } = this.state
+       const { otherUser, user } = store
+       const obj = {
+        _id: makeid(8),
+        text: message,
+        createdAt: new Date(),
+        user: {
+          _id: user._id,
+          name: user.username,
+          avatar: user.profile
+        },
+        reciever: {
+         _id: otherUser._id,
+         name: otherUser.username,
+         avatar: otherUser.profile
+        },
+        select: false,
+        refer: false
+     }
+
        if(refer) {
-         newMessage['refer'] = true
-         newMessage['select'] = selectedMessage
+         obj['refer'] = true
+         obj['select'] = selectedMessage
        }
-       sendMessage(newMessage);
+
+       sendMessage(obj);
        this.setState({
         refer: false,
         showFooter: false,
+        message: '',
         selectedMessage: {}
       })
       Keyboard.dismiss()
@@ -105,17 +117,20 @@ class HomeScreen extends Component {
     )
   }
 
-  InputToolbar = () => {
+  renderInputToolbar = () => {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white', flexDirection: 'row', borderWidth: 2, borderColor: 'green', borderRadius: 50, margin: 5, justifyContent: 'center' }}>
-           <TextInput style={{ width: '80%' }} />
-           <Icon style={{ fontSize: 25, width: '20%' }} name="send" />
+      <View style={{ flex: 1, width: '100%', alignItems: 'center', flexDirection: 'row', bottom: 0, paddingBottom: 10, paddingTop: 5 }}>
+           <View style={{ minHeight: 45, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 2, borderColor: 'green', borderRadius: 20, width: '80%' }}>
+              <TextInput onChangeText={(message)=> this.setState({ message })} multiline={true} placeholder="Type a message" style={{ width: '100%' }} />
+           </View>
+           <View style={{ width: '20%', justifyContent: 'center'}}>
+           <Icon size={30} onPress={this.onSend} style={{ textAlign: 'center', alignSelf: 'center', top: '50%' }} name="send" />
+           </View>
       </View>
     )
   }
 
   renderMessage = (props) => {
-    const { currentMessage } = props;
     return (
         <View>
             {props.position === 'left' && <BubbleLeft selectChat={this.selectChat} { ...props } /> }
@@ -216,6 +231,7 @@ class HomeScreen extends Component {
             renderMessage={this.renderMessage}
             onPressActionButton={this.addImage}
             renderChatFooter={this.renderChatFooter}
+            renderInputToolbar={this.renderInputToolbar}
          />
          {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
          </View>
