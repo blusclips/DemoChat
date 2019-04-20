@@ -21,7 +21,7 @@ const Message = require('./models/Message');
 
 // connection succesfull
 io.on('connection', (socket) => { console.log('conected users')
-    socket.on('send_message', async (data ) => {
+    socket.on('send_message', async (data) => {
        if(!data.image) {
            data.text = data.text.toUpperCase()
        }
@@ -86,6 +86,10 @@ process.on('SIGINT', () => {
 
 // Routes
 app.use('/api/v1/users', users);
+
+app.get('/', (req, res) => {
+  res.send('Demo Chat Server. Yayyks !')
+})
 
 http.listen(port, () =>
   console.info(`Demo app listening on port ${port}!`)
