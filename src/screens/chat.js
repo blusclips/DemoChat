@@ -97,7 +97,7 @@ class HomeScreen extends Component {
       )
     }
     return (
-      <View style={{maxHeight: 100, flexDirection: 'row', marginBottom: 13}}>
+      <View style={{maxHeight: 100, flexDirection: 'row', marginBottom: 13,}}>
       <View style={{minHeight:50, width: 5, backgroundColor: '#435f7a'}}></View>
       <View style={{flexDirection: 'column'}}>
           <Text style={{color: '#435f7a', paddingLeft: 10, paddingTop: 5}}>{replyTo}</Text>
@@ -116,10 +116,10 @@ class HomeScreen extends Component {
     const { send, message } = this.state
     return (
       <View style={{ flex: 1, width: '100%', position: 'absolute', alignItems: 'center', flexDirection: 'row', bottom: 0, paddingBottom: 5, paddingTop: 5 }}>
-           <TextInput value={message} onChangeText={(message)=> this.onChangeText(message)} multiline={true} placeholder="Type a message" style={{ minHeight: 45, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 2, borderColor: '#435f7a', backgroundColor: 'white', borderRadius: 15, width: '80%'  }} />
+           <TextInput value={message} onChangeText={(message)=> this.onChangeText(message)} multiline={true} placeholder="Type a message" style={{ minHeight: 40, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 1, borderColor: '#00695c', backgroundColor: '#fbfbfb', borderRadius: 15, width: '80%'  }} />
            <View style={{ width: '20%', justifyContent: 'center'}}>
-    { send && <Icon size={30} color="#435f7a" onPress={this.onSend} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="send" /> }
-    { !send && <Icon size={30} color="#435f7a" onPress={this.addImage} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="image" /> }
+    { send && <Icon size={30} color="#00695c" onPress={this.onSend} style={{ color: '#00695c', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="send" /> }
+    { !send && <Icon size={30} color="#00695c" onPress={this.addImage} style={{ color: '#00695c', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="image" /> }
            </View>
       </View>
     )
@@ -206,13 +206,13 @@ class HomeScreen extends Component {
     const { profile, username } = store.otherUser
     const { messages, message, user } = store
     return (
-      <View style={{flex: 1, backgroundColor: '#E6EAEA'}}>
+      <View style={{flex: 1, backgroundColor: '#eee'}}>
       <Header
           placement="left"
-          leftComponent={<Image source={{uri: profile }} style={{ width: 35, height: 35, borderRadius: 100 }} />}
-          centerComponent={{ text: username, style: { color: '#fff', fontWeight: 'bold', fontSize: 21 } }}
+          leftComponent={<Image source={{uri: profile }} style={{ width: 35, height: 35, borderRadius: 100, borderWidth: 1, borderColor: '#00695C' }} />}
+          centerComponent={{ text: username, style: { color: '#444', fontSize: 21 } }}
           containerStyle={{
-            backgroundColor: '#556DC1',
+            backgroundColor: '#fbfbfb',
             justifyContent: 'space-around'
           }}
         />

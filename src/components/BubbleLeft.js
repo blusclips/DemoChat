@@ -31,9 +31,10 @@ export default class Navbar extends Component<{}> {
         { currentMessage.select ? <View>
           <View style={styles.innerContainer}>
           <View style={styles.coner}></View>
+          <Text style={{paddingTop: 2, color: '#973', fontSize: 11, fontWeight: 'bold' }}> { currentMessage.select.user.name } </Text>
+
             <Text style={{paddingTop: 5, color: '#666'}}> { currentMessage.select.text } </Text>
             </View>
-            <Text style={{paddingTop: 2, color: '#444', fontSize: 11, fontWeight: 'bold' }}> { currentMessage.select.user.name } </Text>
           </View> : null }
           <Text style={{paddingTop: 2, color: '#435f7a', fontSize: 15, lineHeight: 17 }}> { currentMessage.text } </Text>
           
