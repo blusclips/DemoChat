@@ -31,6 +31,7 @@ class HomeScreen extends Component {
        replyMsg: '',
        replyTo: '',
        message: '',
+       send: false,
        selectedMessage: {}
     }
   }
@@ -118,13 +119,15 @@ class HomeScreen extends Component {
   }
 
   renderInputToolbar = () => {
+    const { send, message } = this.state
     return (
       <View style={{ flex: 1, width: '100%', alignItems: 'center', flexDirection: 'row', bottom: 0, paddingBottom: 10, paddingTop: 5 }}>
-           <View style={{ minHeight: 45, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 2, borderColor: 'green', borderRadius: 20, width: '80%' }}>
-              <TextInput onChangeText={(message)=> this.setState({ message })} multiline={true} placeholder="Type a message" style={{ width: '100%' }} />
+           <View style={{ minHeight: 40, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 2, borderColor: '#435f7a', borderRadius: 20, width: '80%' }}>
+              <TextInput value={message} onChangeText={(message)=> this.onChangeText(message)} multiline={true} placeholder="Type a message" style={{ width: '100%' }} />
            </View>
            <View style={{ width: '20%', justifyContent: 'center'}}>
-           <Icon size={30} onPress={this.onSend} style={{ textAlign: 'center', alignSelf: 'center', top: '50%' }} name="send" />
+    { send && <Icon size={30} color="#435f7a" onPress={this.onSend} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="send" /> }
+    { !send && <Icon size={30} color="#435f7a" onPress={this.onSend} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="image" /> }
            </View>
       </View>
     )
@@ -195,6 +198,14 @@ class HomeScreen extends Component {
          upload: false
       }
       uploadImage(obj)
+    }
+  }
+
+  onChangeText = (message) => {
+    if(message != "") {
+       this.setState({ message, send: true })
+    } else {
+       this.setState({ send: false })
     }
   }
 
