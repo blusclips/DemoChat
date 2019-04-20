@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { loginUserAction, setValueAction } from '../actions/users'
 
 import Title from '../components/title'
@@ -22,10 +22,12 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, width: '80%', marginLeft: '10%' }}>
-           {Title({ title: 'Demo Messaenger'})}
-           <ButtonLOng label="Login as userA" onPress={this.loginUserA} />
-           <ButtonLOng label="Login as userB" onPress={this.loginUserB} />
+      <View style={styles.container}>
+           <Text style={[styles.heading]}>Messenger</Text>
+           <Text style={[styles.heading, styles.one]}>Demo</Text>
+           <ButtonLOng label="Login as USER A" onPress={this.loginUserA}/>
+           <Text style={styles.or}>Or</Text>
+           <ButtonLOng label="Login as USER B" onPress={this.loginUserB} />
       </View>
     );
   }
@@ -52,14 +54,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  loader: {
-    justifyContent: 'center',
+  heading: {
+    fontSize: 40,
+    color: '#615A5A',
   },
-  network: {
-    textAlign: 'center',
-    justifyContent: 'center',
-    fontSize: 14,
-    fontWeight: 'bold'
+  one: {
+    color: '#AAAAAA',
+    marginBottom: 120,
+  },
+  or: {
+    fontSize: 16,
+    color: '#AAAAAA',
+    marginTop: 20,
+    marginBottom: 20,
   }
 });

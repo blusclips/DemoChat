@@ -9,9 +9,11 @@ export default (styles = StyleSheet.create({
     borderRadius: 50,
   },
   buttonLong: {
-    height: 43,
-    marginTop: 70,
-    backgroundColor: '#435f7a',
+    paddingRight: 50,
+    paddingLeft: 50,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#556DC1',
     borderRadius: 100,
     justifyContent: 'center',
   },
@@ -21,6 +23,5 @@ export default (styles = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 18,
     textAlign: 'center',
-    fontWeight: 'bold',
   },
 }));
