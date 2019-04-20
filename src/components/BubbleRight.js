@@ -19,7 +19,9 @@ export default class Navbar extends Component {
   }
   
   chatHighlight = (message) => {
-    this.props.selectChat(message)
+    if(!message.image) {
+      this.props.selectChat(message)
+    }
   }
 
 	render() {
