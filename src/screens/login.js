@@ -10,32 +10,22 @@ import ButtonLOng from '../components/button/long'
 
 class HomeScreen extends Component {
 
-  loginUser = () => {
-    const { store, setValue, loginUser, navigation } = this.props
-    const { username } = store
-    if(username === 'userA' || username === 'userB') {
-      loginUser({ username, navigation })
-    } else {
-      setValue({ field: 'error', value: 'Enter Username - (userA or userB)' })
-      return
-    }
+  loginUserB = () => {
+    const { loginUser, navigation } = this.props
+    loginUser({ username: 'userB', navigation})
   }
 
-  addUsername = (value) => {
-    const { setValue } = this.props
-    setValue({field: 'error', value: '' })
-    setValue({field: 'username', value }) 
+  loginUserA = () => {
+    const { loginUser, navigation } = this.props
+    loginUser({ username: 'userA', navigation})
   }
 
   render() {
-    const { store, setValue } = this.props
-    const { error, username } = store
     return (
       <View style={{ flex: 1, width: '80%', marginLeft: '10%' }}>
            {Title({ title: 'Demo Messaenger'})}
-           {(error !== '') && <Error error={error} /> }
-           <TextInput label="userA or userB" onChange={ this.addUsername } />
-           <ButtonLOng label="Login" onPress={this.loginUser} />
+           <ButtonLOng label="Login as userA" onPress={this.loginUserA} />
+           <ButtonLOng label="Login as userB" onPress={this.loginUserB} />
       </View>
     );
   }
