@@ -28,8 +28,11 @@ class HomeScreen extends Component {
   }
 
   componentWillMount = () => {
-    const { getNewMessage, store } = this.props
-    getNewMessage(store.user._id)
+    const { getNewMessage, store, setValue } = this.props
+    if(!store.user_logged_in) {
+      getNewMessage(store.user._id)
+      setValue({field: 'user_logged_in', value: true })
+    }
   }
 
   onSend = () => {
@@ -165,8 +168,6 @@ class HomeScreen extends Component {
       aspect: [4, 3],
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({ image: result.uri });
       const { store, uploadImage } = this.props
@@ -210,9 +211,9 @@ class HomeScreen extends Component {
       <Header
           placement="left"
           leftComponent={<Image source={{uri: profile }} style={{ width: 35, height: 35, borderRadius: 100 }} />}
-          centerComponent={{ text: username, style: { color: '#435f7a', fontWeight: 'bold', fontSize: 21 } }}
+          centerComponent={{ text: username, style: { color: '#fff', fontWeight: 'bold', fontSize: 21 } }}
           containerStyle={{
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#556DC1',
             justifyContent: 'space-around'
           }}
         />

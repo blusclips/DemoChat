@@ -2,6 +2,7 @@ import { set_value, add_sent_message, refer_message, upload_image, add_offline_m
 
 const initialState = {
   json_web_token: 'jwt',
+  user_logged_in: false,
   users: [],
   user: {},
   otherUser: {},

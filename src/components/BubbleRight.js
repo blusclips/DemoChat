@@ -13,7 +13,7 @@ const config = {
   directionalOffsetThreshold: 80
 };
 
-export default class Navbar extends Component<{}> {
+export default class Navbar extends Component {
 	constructor(props) {
     super(props);
   }
@@ -30,17 +30,14 @@ export default class Navbar extends Component<{}> {
         <TouchableOpacity 
           onLongPress={() => this.chatHighlight(currentMessage)}
            style={[styles.itemOut, { marginBottom }]}>
-        <View style={[styles.balloon, {backgroundColor: !currentMessage.image ? '#26A69A' : null  }]}>
+        <View style={[styles.balloon, styles.bubblesContainer, {backgroundColor: !currentMessage.image ? '#86AEFA' : null  }]}>
           { currentMessage.select ? <View>
             <View style={{ padding: 5}}>
-                <View style={{backgroundColor: '#9FADBD', borderRadius: 15}}>
-                  <View style={{flexDirection: 'row',}}>
-                    <View style={{height:50, width: 10, backgroundColor: '#00468A', borderTopLeftRadius: 15, borderBottomLeftRadius: 15}} />
+                <View style={styles.innerText}>
                       <View style={{flexDirection: 'column'}}>
-                        <Text style={{color: 'white', paddingHorizontal: 10, paddingTop: 5, fontWeight: '700'}}>{ currentMessage.select.user.name }</Text>
-                        <Text style={{color: 'white', paddingHorizontal: 10, paddingTop: 5}}>{ currentMessage.select.text }</Text>
+                        <Text style={{color: '#666', paddingHorizontal: 10, paddingTop: 5, fontWeight: '700'}}>{ currentMessage.select.user.name }</Text>
+                        <Text style={{color: '#444', paddingHorizontal: 10, paddingTop: 5}}>{ currentMessage.select.text }</Text>
                       </View>
-                  </View>
                 </View>
               </View>
           </View> : null }
@@ -142,6 +139,14 @@ const styles = StyleSheet.create({
      position: 'absolute',
      backgroundColor: 'red',
      width: '100%'
+   },
+   innerText: {
+     backgroundColor: "#BBCBFD",
+     paddingBottom: 4,
+     borderRadius: 10,
+     marginTop: -5
+   },
+   bubblesContainer: {
    }
   });
 
