@@ -30,17 +30,14 @@ export default class Navbar extends Component<{}> {
         <TouchableOpacity 
           onLongPress={() => this.chatHighlight(currentMessage)}
            style={[styles.itemOut, { marginBottom }]}>
-        <View style={[styles.balloon, {backgroundColor: !currentMessage.image ? '#435f7a' : null  }]}>
+        <View style={[styles.balloon, styles.bubblesContainer, {backgroundColor: !currentMessage.image ? '#86AEFA' : null  }]}>
           { currentMessage.select ? <View>
             <View style={{ padding: 5}}>
-                <View style={{backgroundColor: '#9FADBD', borderRadius: 15}}>
-                  <View style={{flexDirection: 'row',}}>
-                    <View style={{height:50, width: 5, backgroundColor: '#0099ff'}} />
+                <View style={styles.innerText}>
                       <View style={{flexDirection: 'column'}}>
-                        <Text style={{color: 'white', paddingHorizontal: 10, paddingTop: 5, fontWeight: '700'}}>{ currentMessage.select.user.name }</Text>
-                        <Text style={{color: 'white', paddingHorizontal: 10, paddingTop: 5}}>{ currentMessage.select.text }</Text>
+                        <Text style={{color: '#666', paddingHorizontal: 10, paddingTop: 5, fontWeight: '700'}}>{ currentMessage.select.user.name }</Text>
+                        <Text style={{color: '#444', paddingHorizontal: 10, paddingTop: 5}}>{ currentMessage.select.text }</Text>
                       </View>
-                  </View>
                 </View>
               </View>
           </View> : null }
@@ -61,7 +58,7 @@ export default class Navbar extends Component<{}> {
            <Svg style={styles.arrowRight} width={moderateScale(15.5, 0.6)} height={moderateScale(17.5, 0.6)} viewBox="32.485 17.5 15.515 17.5"  enable-background="new 32.485 17.5 15.515 17.5">
                 <Svg.Path
                     d="M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
-                    fill={ !currentMessage.refer ? '#435f7a' : '#009ef7' }
+                    fill={ !currentMessage.refer ? '#86AEFA' : null }
                     x="0"
                     y="0"
                 />
@@ -142,6 +139,14 @@ const styles = StyleSheet.create({
      position: 'absolute',
      backgroundColor: 'red',
      width: '100%'
+   },
+   innerText: {
+     backgroundColor: "#BBCBFD",
+     paddingBottom: 4,
+     borderRadius: 10,
+     marginTop: -5
+   },
+   bubblesContainer: {
    }
   });
 

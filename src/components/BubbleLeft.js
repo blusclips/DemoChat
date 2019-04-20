@@ -27,10 +27,13 @@ export default class Navbar extends Component<{}> {
          const marginBottom = sameUser ? 2 : 10;
        return(
         <TouchableOpacity onLongPress={() => this.chatHighlight(currentMessage)} style={[styles.item, styles.itemIn, { marginBottom }]}>
-        <View style={[styles.balloon, { backgroundColor: !currentMessage.image ? '#f5f5f5' : null }]}>
-        { currentMessage.select ? <View> 
-            <Text style={{paddingTop: 5, color: 'white'}}> { currentMessage.select.text } </Text>
-            <Text style={{paddingTop: 2, color: 'white', fontSize: 11, fontWeight: 'bold' }}> { currentMessage.select.user.name } </Text>
+        <View style={[styles.balloon, styles.border, { backgroundColor: !currentMessage.image ? '#f5f5f5' : null }]}>
+        { currentMessage.select ? <View>
+          <View style={styles.innerContainer}>
+          <View style={styles.coner}></View>
+            <Text style={{paddingTop: 5, color: '#666'}}> { currentMessage.select.text } </Text>
+            </View>
+            <Text style={{paddingTop: 2, color: '#444', fontSize: 11, fontWeight: 'bold' }}> { currentMessage.select.user.name } </Text>
           </View> : null }
           <Text style={{paddingTop: 2, color: '#435f7a', fontSize: 15, lineHeight: 17 }}> { currentMessage.text } </Text>
           
@@ -128,6 +131,17 @@ const styles = StyleSheet.create({
 
  arrowRight: {
      right:moderateScale(-6, 0.5),
+ },
+ innerContainer: {
+   backgroundColor: '#e5e5e5',
+   borderRadius: 10,
+   padding: 5,
+   borderWidth: 1,
+   borderColor: '#d9d9d9'
+ },
+ border: {
+   borderWidth: 1,
+   borderColor: '#e3e3e3',
  }
 });
 
