@@ -6,20 +6,11 @@ import { GiftedChat, Actions } from 'react-native-gifted-chat';
 import { StyleSheet, View, Image, Text, Platform } from 'react-native';
 import { ImagePicker, Permissions } from 'expo';
 import { Header, Icon } from 'react-native-elements'
+import UUIDV4 from 'uuid/v4'
 import { setValueAction, sendMessageAction, referMessAction, uploadImageAction, getNewMessageAction } from '../actions/users'
 
 import BubbleLeft from '../components/BubbleLeft'
 import BubbleRight from '../components/BubbleRight'
-
-function makeid(length) {
-  let text = "";
-  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (let i = 0; i < length; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
 
 
 class HomeScreen extends Component {
@@ -46,7 +37,7 @@ class HomeScreen extends Component {
        const { refer, selectedMessage, message } = this.state
        const { otherUser, user } = store
        const obj = {
-        _id: makeid(8),
+        _id: UUIDV4(),
         text: message,
         createdAt: new Date(),
         user: {
@@ -73,6 +64,7 @@ class HomeScreen extends Component {
         refer: false,
         showFooter: false,
         message: '',
+        send: false,
         selectedMessage: {}
       })
       Keyboard.dismiss()
@@ -100,11 +92,13 @@ class HomeScreen extends Component {
   renderChatFooter = () => {
     const { replyTo, replyMsg, showFooter } = this.state
     if(!showFooter) {
-      return null
+      return (
+        <View style={{ height: 30 }} />
+      )
     }
     return (
-      <View style={{height: 50, flexDirection: 'row'}}>
-      <View style={{height:50, width: 5, backgroundColor: '#435f7a'}}></View>
+      <View style={{maxHeight: 100, flexDirection: 'row', marginBottom: 13}}>
+      <View style={{minHeight:50, width: 5, backgroundColor: '#435f7a'}}></View>
       <View style={{flexDirection: 'column'}}>
           <Text style={{color: '#435f7a', paddingLeft: 10, paddingTop: 5}}>{replyTo}</Text>
           <Text style={{color: 'gray', paddingLeft: 10, paddingTop: 5}}>{replyMsg}</Text>
@@ -121,13 +115,11 @@ class HomeScreen extends Component {
   renderInputToolbar = () => {
     const { send, message } = this.state
     return (
-      <View style={{ flex: 1, width: '100%', alignItems: 'center', flexDirection: 'row', bottom: 0, paddingBottom: 10, paddingTop: 5 }}>
-           <View style={{ minHeight: 40, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 2, borderColor: '#435f7a', borderRadius: 20, width: '80%' }}>
-              <TextInput value={message} onChangeText={(message)=> this.onChangeText(message)} multiline={true} placeholder="Type a message" style={{ width: '100%' }} />
-           </View>
+      <View style={{ flex: 1, width: '100%', position: 'absolute', alignItems: 'center', flexDirection: 'row', bottom: 0, paddingBottom: 5, paddingTop: 5 }}>
+           <TextInput value={message} onChangeText={(message)=> this.onChangeText(message)} multiline={true} placeholder="Type a message" style={{ minHeight: 45, marginTop: 5, marginBottom: 5, paddingLeft: 15, marginLeft: 10, borderWidth: 2, borderColor: '#435f7a', backgroundColor: 'white', borderRadius: 15, width: '80%'  }} />
            <View style={{ width: '20%', justifyContent: 'center'}}>
     { send && <Icon size={30} color="#435f7a" onPress={this.onSend} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="send" /> }
-    { !send && <Icon size={30} color="#435f7a" onPress={this.onSend} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="image" /> }
+    { !send && <Icon size={30} color="#435f7a" onPress={this.addImage} style={{ color: '#435f7a', textAlign: 'center', alignSelf: 'center', top: '50%' }} name="image" /> }
            </View>
       </View>
     )
@@ -180,7 +172,7 @@ class HomeScreen extends Component {
       const { store, uploadImage } = this.props
       const { user, otherUser } = store
       const obj = {
-         _id: makeid(8),
+         _id: UUIDV4(),
          createdAt: new Date(),
          user: {
            _id: user._id,
@@ -205,7 +197,7 @@ class HomeScreen extends Component {
     if(message != "") {
        this.setState({ message, send: true })
     } else {
-       this.setState({ send: false })
+       this.setState({ message, send: false })
     }
   }
 
@@ -239,6 +231,7 @@ class HomeScreen extends Component {
             alwaysShowSend={true}
             showUserAvatar={true}
             scrollToBottom={true}
+            bottomOffset={100}
             renderMessage={this.renderMessage}
             onPressActionButton={this.addImage}
             renderChatFooter={this.renderChatFooter}
