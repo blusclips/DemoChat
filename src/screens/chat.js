@@ -192,9 +192,9 @@ class HomeScreen extends Component {
       <Header
           placement="left"
           leftComponent={<Image source={{uri: profile }} style={{ width: 35, height: 35, borderRadius: 100 }} />}
-          centerComponent={{ text: username, style: { color: '#435f7a', fontWeight: 'bold', fontSize: 21 } }}
+          centerComponent={{ text: username, style: { color: '#fff', fontWeight: 'bold', fontSize: 21 } }}
           containerStyle={{
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#556DC1',
             justifyContent: 'space-around'
           }}
         />
