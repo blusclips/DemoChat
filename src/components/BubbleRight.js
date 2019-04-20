@@ -13,7 +13,7 @@ const config = {
   directionalOffsetThreshold: 80
 };
 
-export default class Navbar extends Component<{}> {
+export default class Navbar extends Component {
 	constructor(props) {
     super(props);
   }
@@ -30,11 +30,7 @@ export default class Navbar extends Component<{}> {
         <TouchableOpacity 
           onLongPress={() => this.chatHighlight(currentMessage)}
            style={[styles.itemOut, { marginBottom }]}>
-<<<<<<< HEAD
         <View style={[styles.balloon, styles.bubblesContainer, {backgroundColor: !currentMessage.image ? '#86AEFA' : null  }]}>
-=======
-        <View style={[styles.balloon, {backgroundColor: !currentMessage.image ? '#26A69A' : null  }]}>
->>>>>>> 430fdf60422b87c91102abd1002f04652e90325a
           { currentMessage.select ? <View>
             <View style={{ padding: 5}}>
                 <View style={styles.innerText}>
@@ -62,11 +58,7 @@ export default class Navbar extends Component<{}> {
            <Svg style={styles.arrowRight} width={moderateScale(15.5, 0.6)} height={moderateScale(17.5, 0.6)} viewBox="32.485 17.5 15.515 17.5"  enable-background="new 32.485 17.5 15.515 17.5">
                 <Svg.Path
                     d="M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
-<<<<<<< HEAD
                     fill={ !currentMessage.refer ? '#86AEFA' : null }
-=======
-                    fill={ '#435f7a' }
->>>>>>> 430fdf60422b87c91102abd1002f04652e90325a
                     x="0"
                     y="0"
                 />
