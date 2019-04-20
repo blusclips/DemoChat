@@ -10,6 +10,7 @@ export default (styles = StyleSheet.create({
   },
   buttonLong: {
     paddingRight: 50,
+    width: '100%',
     paddingLeft: 50,
     paddingTop: 10,
     paddingBottom: 10,
@@ -21,7 +22,8 @@ export default (styles = StyleSheet.create({
     fontFamily: 'Roboto',
     color: buttonText,
     justifyContent: 'center',
-    fontSize: 18,
+    fontSize: 14,
+    fontWeight: 'bold',
     textAlign: 'center',
   },
 }));

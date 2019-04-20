@@ -28,8 +28,11 @@ class HomeScreen extends Component {
   }
 
   componentWillMount = () => {
-    const { getNewMessage, store } = this.props
-    getNewMessage(store.user._id)
+    const { getNewMessage, store, setValue } = this.props
+    if(!store.user_logged_in) {
+      getNewMessage(store.user._id)
+      setValue({field: 'user_logged_in', value: true })
+    }
   }
 
   onSend = () => {
@@ -164,8 +167,6 @@ class HomeScreen extends Component {
       allowsEditing: false,
       aspect: [4, 3],
     });
-
-    console.log(result);
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });

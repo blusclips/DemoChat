@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, View, Text } from 'react-native';
 import { loginUserAction, setValueAction } from '../actions/users'
-
-import Title from '../components/title'
-import Error from '../components/error'
-import TextInput from '../components/input'
 import ButtonLOng from '../components/button/long'
 
 class HomeScreen extends Component {
@@ -23,8 +19,8 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-           <Text style={[styles.heading]}>Messenger</Text>
-           <Text style={[styles.heading, styles.one]}>Demo</Text>
+           <Text style={[styles.heading]}> Demo </Text>
+           <Text style={[styles.heading, styles.one]}> Messenger </Text>
            <ButtonLOng label="Login as USER A" onPress={this.loginUserA}/>
            <Text style={styles.or}>Or</Text>
            <ButtonLOng label="Login as USER B" onPress={this.loginUserB} />
@@ -53,15 +49,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    marginTop: 100,
+    width: '80%',
+    marginLeft: '10%',
     alignItems: 'center',
   },
   heading: {
-    fontSize: 40,
+    fontSize: 25,
+    fontWeight: 'bold',
     color: '#615A5A',
   },
   one: {
     color: '#AAAAAA',
+    fontStyle: 'italic',
     marginBottom: 120,
   },
   or: {
