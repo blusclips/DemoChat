@@ -61,7 +61,7 @@ export default class Navbar extends Component<{}> {
            <Svg style={styles.arrowRight} width={moderateScale(15.5, 0.6)} height={moderateScale(17.5, 0.6)} viewBox="32.485 17.5 15.515 17.5"  enable-background="new 32.485 17.5 15.515 17.5">
                 <Svg.Path
                     d="M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
-                    fill={ '#435f7a' }
+                    fill={ '#26A69A' }
                     x="0"
                     y="0"
                 />
