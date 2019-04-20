@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { TouchableOpacity, Keyboard } from 'react-native'
+import { TouchableOpacity, Keyboard, TextInput } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { GiftedChat, Actions } from 'react-native-gifted-chat';
 import { StyleSheet, View, Image, Text, Platform } from 'react-native';
@@ -101,6 +101,15 @@ class HomeScreen extends Component {
               <Icon name="x" type="feather" color="#0084ff" />
           </TouchableOpacity>
          </View>
+      </View>
+    )
+  }
+
+  InputToolbar = () => {
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white', flexDirection: 'row', borderWidth: 2, borderColor: 'green', borderRadius: 50, margin: 5, justifyContent: 'center' }}>
+           <TextInput style={{ width: '80%' }} />
+           <Icon style={{ fontSize: 25, width: '20%' }} name="send" />
       </View>
     )
   }
