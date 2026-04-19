@@ -8,10 +8,6 @@ import { utils } from "react-native-gifted-chat";
 import Svg, { Path } from "react-native-svg";
 
 const { isSameUser } = utils;
-const config = {
-  velocityThreshold: 0.3,
-  directionalOffsetThreshold: 80
-};
 
 export default class Navbar extends Component {
   constructor(props) {

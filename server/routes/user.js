@@ -1,25 +1,73 @@
 const express = require('express');
-const socket = require('socket.io')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-// Load User model
 const User = require('../models/User');
 
-router.get('/test', (req, res) => res.json({ msg: 'User route works' })) 
+const MAX_USERNAME_LENGTH = 64;
+const MAX_PASSWORD_LENGTH = 128;
 
-// api for loggin in user (UserA or userB)
-// joining the demo room
+router.get('/test', (req, res) => res.json({ msg: 'User route works' }));
 
 router.post('/login', async (req, res) => {
-   const user = await User.findOne({ username: req.body.username}).exec();
-   const otherUser = await User.findOne({ username: { $ne: req.body.username }})
-   // check if user exists
-   if(user){
-      await res.json({ status: 200, data: { user, otherUser } })
-   } else {
-    res.json({ status: 200, data: {} });
-   } 
-})
+  try {
+    const { username, password } = req.body || {};
 
-module.exports = router
+    if (
+      typeof username !== 'string' ||
+      !username.trim() ||
+      username.length > MAX_USERNAME_LENGTH
+    ) {
+      return res.status(400).json({ error: 'Invalid username' });
+    }
+    if (
+      typeof password !== 'string' ||
+      !password ||
+      password.length > MAX_PASSWORD_LENGTH
+    ) {
+      return res.status(400).json({ error: 'Invalid password' });
+    }
+
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return res.status(500).json({ error: 'Server is not configured' });
+    }
+
+    const user = await User.findOne({ username: username.trim() }).exec();
+    if (!user || !user.password) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const otherUser = await User.findOne({
+      username: { $ne: user.username },
+    })
+      .select('-password')
+      .exec();
+
+    const token = jwt.sign({ sub: user._id.toString(), username: user.username }, jwtSecret, {
+      expiresIn: '7d',
+    });
+
+    const safeUser = { _id: user._id, username: user.username };
+    const safeOtherUser = otherUser
+      ? { _id: otherUser._id, username: otherUser.username }
+      : {};
+
+    return res.json({
+      token,
+      data: { user: safeUser, otherUser: safeOtherUser },
+    });
+  } catch (err) {
+    console.error('Login failed', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+module.exports = router;
