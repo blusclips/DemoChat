@@ -1,50 +1,74 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { StyleSheet, View, Text } from 'react-native';
-import { loginUserAction, setValueAction } from '../actions/users'
-import ButtonLOng from '../components/button/long'
+import { connect } from 'react-redux';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 
-class HomeScreen extends Component {
+import { loginUserAction, setValueAction } from '../actions/users';
+import ButtonLOng from '../components/button/long';
 
-  loginUserB = () => {
-    const { loginUser, navigation } = this.props
-    loginUser({ username: 'userB', navigation})
+class LoginScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+    };
   }
 
-  loginUserA = () => {
-    const { loginUser, navigation } = this.props
-    loginUser({ username: 'userA', navigation})
-  }
+  onSubmit = () => {
+    const { loginUser, navigation, setValue } = this.props;
+    const username = this.state.username.trim();
+    const { password } = this.state;
+    if (!username || !password) {
+      setValue({ field: 'error', value: 'Enter username and password' });
+      return;
+    }
+    setValue({ field: 'error', value: '' });
+    loginUser({ username, password, navigation });
+  };
 
   render() {
+    const { store } = this.props;
+    const error = (store && store.error) || '';
     return (
       <View style={styles.container}>
-           <Text style={[styles.heading]}> Demo </Text>
-           <Text style={[styles.heading, styles.one]}> Messenger </Text>
-           <ButtonLOng label="Login as USER A" onPress={this.loginUserA}/>
-           <Text style={styles.or}>Or</Text>
-           <ButtonLOng label="Login as USER B" onPress={this.loginUserB} />
+        <Text style={[styles.heading]}> Demo </Text>
+        <Text style={[styles.heading, styles.one]}> Messenger </Text>
+        <TextInput
+          value={this.state.username}
+          onChangeText={(username) => this.setState({ username })}
+          placeholder="Username"
+          autoCapitalize="none"
+          autoCorrect={false}
+          style={styles.input}
+        />
+        <TextInput
+          value={this.state.password}
+          onChangeText={(password) => this.setState({ password })}
+          placeholder="Password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry
+          style={styles.input}
+        />
+        <ButtonLOng label="Log in" onPress={this.onSubmit} />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {
-    store: state
-  }
-  // body...
+  return { store: state };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-     setValue: (obj) => dispatch(setValueAction(obj)),
-     loginUser: (obj) => dispatch(loginUserAction(obj))
-  }
-  // body...
+    setValue: (obj) => dispatch(setValueAction(obj)),
+    loginUser: (obj) => dispatch(loginUserAction(obj)),
+  };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -62,12 +86,21 @@ const styles = StyleSheet.create({
   one: {
     color: '#AAAAAA',
     fontStyle: 'italic',
-    marginBottom: 120,
+    marginBottom: 60,
   },
-  or: {
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
     fontSize: 16,
-    color: '#AAAAAA',
-    marginTop: 20,
-    marginBottom: 20,
-  }
+  },
+  error: {
+    color: '#C62828',
+    marginTop: 12,
+    textAlign: 'center',
+  },
 });

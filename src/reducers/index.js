@@ -1,7 +1,13 @@
-import { set_value, add_sent_message, refer_message, upload_image, add_offline_messages } from '../actions/types';
+import {
+  set_value,
+  add_sent_message,
+  refer_message,
+  upload_image,
+  add_offline_messages,
+} from '../actions/types';
 
 const initialState = {
-  json_web_token: 'jwt',
+  json_web_token: '',
   user_logged_in: false,
   users: [],
   user: {},
@@ -11,65 +17,62 @@ const initialState = {
   error: '',
   username: '',
   messages: [],
-  message: ''
+  message: '',
 };
+
+function parseOfflineMessage(raw) {
+  if (!raw) return null;
+  try {
+    return typeof raw.message === 'string' ? JSON.parse(raw.message) : null;
+  } catch (err) {
+    return null;
+  }
+}
 
 export default function accountReducer(state = initialState, action) {
   switch (action.type) {
     case set_value:
       return {
         ...state,
-        [action.data.field]: action.data.value
-      }
-    case add_offline_messages:
-    const offlineMessages = action.data.map(messageObj => {
-        messageObj = JSON.parse(messageObj.message)
-        return messageObj
-    });
-    return {
-      ...state,
-      messages: offlineMessages.reverse()
-    }
-    case add_sent_message:
-      const messageArr = [...[action.data], ...state.messages];
-      messageArr.map((mes) => {
-        if(mes.refer) {
-           mes.refer = false
-           return mes
-        } else {
-          return mes
-        }
-      })
+        [action.data.field]: action.data.value,
+      };
+
+    case add_offline_messages: {
+      const offlineMessages = (Array.isArray(action.data) ? action.data : [])
+        .map(parseOfflineMessage)
+        .filter(Boolean);
       return {
         ...state,
-        messages: messageArr
-      }
+        messages: offlineMessages.reverse(),
+      };
+    }
+
+    case add_sent_message: {
+      const clearedReferences = state.messages.map((mes) =>
+        mes.refer ? { ...mes, refer: false } : mes,
+      );
+      return {
+        ...state,
+        messages: [action.data, ...clearedReferences],
+      };
+    }
+
     case refer_message:
-      const newMesageArr = state.messages.map((mess) => {
-         if(mess._id === action.data._id) {
-            mess.refer = !mess.refer;
-            return mess
-         } else {
-            return mess
-         }
-      })
       return {
         ...state,
-        messages: newMesageArr
-      }
+        messages: state.messages.map((mess) =>
+          mess._id === action.data._id ? { ...mess, refer: !mess.refer } : mess,
+        ),
+      };
+
     case upload_image:
-    const MessageArr = state.messages.map((mess) => {
-      if(mess._id === action.data._id) {
-        mess.upload = true
-        return mess
-      } else {
-        return mess
-      }
-    })
-    return {
-      ...state,
-      messages: MessageArr
-    }
+      return {
+        ...state,
+        messages: state.messages.map((mess) =>
+          mess._id === action.data._id ? { ...mess, upload: true } : mess,
+        ),
+      };
+
     default:
       return state;
   }
